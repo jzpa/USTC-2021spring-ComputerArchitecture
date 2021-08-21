@@ -1,0 +1,179 @@
+%!TEX program = xelatex
+\documentclass[12pt,a4paper,utf8]{ctexart}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{subfig}
+\usepackage{cite}
+\usepackage[ntheorem]{empheq}
+\usepackage{enumitem}
+\usepackage{fullpage}
+\usepackage{cleveref}
+\usepackage{cellspace}
+\usepackage{listings}
+\usepackage{color}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{dkgreen}{rgb}{.068,.578,.068}
+\definecolor{dkpurple}{rgb}{.320,.064,.680}
+
+% set Matlab styles
+\lstset{
+   language=Matlab,
+   keywords={break,case,catch,continue,else,elseif,end,for,function,
+      global,if,otherwise,persistent,return,switch,try,while},
+   basicstyle=\ttfamily,
+   keywordstyle=\color{blue}\bfseries,
+   commentstyle=\color{dkgreen},
+   stringstyle=\color{dkpurple},
+   backgroundcolor=\color{white},
+   tabsize=4,
+   showspaces=false,
+   showstringspaces=false
+}
+
+\begin{document}
+
+\CJKfamily{zhkai}       
+
+
+\begin{center}
+\textbf{作业一}\\
+\textbf{林成渊 ~~~~~ PB18051113 ~~~~~ \zhtoday}\\
+\end{center}
+\textit{}
+\vspace{\baselineskip}
+
+\begin{enumerate}
+\item[EX1] %\textbf{重心插值公式(barycentric interpolation formula)}  
+某台计算机执行标准测试程序，程序中指令类型、出现频率、需要时钟周期数如下：
+\begin{table}[h!]
+	\begin{center}
+		%\caption{Your first table.}
+		\begin{tabular}{|c|c|c|}
+			\hline
+			指令类型 & 指令出现频率 & 需要时钟周期数 \\
+			\hline
+			R & 30\% & 2 \\
+			\hline
+			I & 25\% & 3 \\
+			\hline
+			S & 20\% & 2 \\
+			\hline
+			U & 15\% & 4 \\
+			\hline
+			B & 5\% & 4 \\
+			\hline
+			J & 5\% & 2 \\
+			\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\textbf{1.1 计算CPI}
+
+解：由题意列式计算有
+\begin{equation}
+	\begin{aligned}
+		CPI & = 30\% \times 2 + 25\% \times 3 + 20\%\times 2 + 15\% \times 4 + 5\% \times 4 + 5\% \times 2 \\
+			& = 2.65
+	\end{aligned}
+	\nonumber
+\end{equation}
+
+	
+\textbf{1.2 有以下两种方案进行优化：}
+\begin{itemize}
+	\item \textbf{A.}整体时钟周期时间缩短到原本的0.9
+	\item \textbf{B.}B类型和U类型指令需要的时钟周期数减少1
+\end{itemize}
+试比较这两种方案
+
+解：分别计算两种方案的加速比如下
+\begin{equation}
+	\begin{aligned}
+		\mbox{Case A:} \quad \mu_A 	&= 1 / 0.9 \\
+								&= \frac{10}{9} \\
+								&\approx 111.11\% \\
+		\mbox{Case B:} \quad \mu_B	&= t_{old} / t_{new} \\
+									&= \bigg( 30\% \times 2 + 25\% \times 3 + 20\%\times 2 + 15\% \times 4 + 5\% \times 4 + 5\% \times 2 \bigg)  \bigg/ \\ 
+									&\qquad \bigg( 30\% \times 2 + 25\% \times 3 + 20\%\times 2 + 15\% \times 3 + 5\% \times 3 + 5\% \times 2\bigg) \\
+								&= \frac{53}{49} \\
+								&\approx 108.16\%
+	\end{aligned}
+	\nonumber
+\end{equation}
+可见加速比$ \mu_A > \mu_B $，选择方案A更佳
+
+\item[EX2] %\textbf{重心插值公式(barycentric interpolation formula)}  
+我们通过添加高性能硬件模块来提升机器的性能，当计算通过高性能模块进行加速时，其速度是正常运行的20倍，将通过高性能模块进行加速的运算花费的时间百分比记为$ \alpha $(加速后所测得执行时间百分比)
+
+\textbf{2.1 $\alpha $达到多少时，运算总体加速比达到$3$}
+
+解：根据题意列式得
+\begin{equation}
+	\begin{aligned}
+		\mbox{加速比} &= t_{old} / t_{new} \\
+						&= (20 \times \alpha + (1 - \alpha)) / 1 \\
+						&= 3
+	\end{aligned}
+	\nonumber
+\end{equation}
+解得$\alpha = 2/19$
+
+\textbf{2.2 在整体加速比为$3$的情况下，被加速的计算在原执行时间中占比例为多少}
+
+解：引用2.1题数据列式得
+\begin{equation}
+	\begin{aligned}
+		\mbox{比例} &= (20 \times \alpha ) / (20 \times \alpha + (1 - \alpha)) \\
+					&= \frac{40}{57}
+	\end{aligned}
+	\nonumber
+\end{equation}
+
+\textbf{2.3 $\alpha $达到多少时，运算整体加速比能达到此加速方式最大加速比的一半}
+
+解：关于“此加速方式的最大加速比”存在两种理解，如看作加速部分指令原来的比例不变而加速的倍率可以提至无限，根据题意列式得
+\begin{equation}
+	\begin{aligned}
+		\mbox{运算整体加速比}		&= t_{old} / t_{new} \\
+								&= (20 \times \alpha + (1 - \alpha)) / 1 \\
+								&= \mbox{此加速方式最大加速比} \bigg / 2 \\
+								&= t_{old} / t_{ideal} \\
+								&= (19\times \alpha + 1) / (1 - \alpha )
+	\end{aligned}
+	\nonumber
+\end{equation}
+解得$\alpha = 1/2$
+
+但是若看作加速的倍率不变而加速部分指令原来的比例可变，根据题意列式得
+\begin{equation}
+	\begin{aligned}
+		\mbox{运算整体加速比}		&= t_{old} / t_{new} \\
+		&= (20 \times \alpha + (1 - \alpha)) / 1 \\
+		&= \mbox{此加速方式最大加速比} \bigg / 2 \\
+		&= 20 / 2 \\
+		&= 10
+	\end{aligned}
+	\nonumber
+\end{equation}
+解得$\alpha = 9/19$
+
+\item[EX3] %\textbf{重心插值公式(barycentric interpolation formula)}  
+我们为一种实时应用设计系统，这种应用要求必须在指定期限之前完成，提前完成计算没有收益。我们发现，在最糟糕的情况下，这一系统执行必需代码的速度是最低要求速度的两倍
+
+\textbf{3.1 如果以当前速度执行计算，并在完成任务后关闭系统，可节省多少能量}
+
+解：由于当前速度是最低要求速度的两倍，期限之前完成任务仅需一半时间，另外一半时间内系统处于关闭状态，故节省了$50\%$的能量
+
+\textbf{3.2 如果将电压和频率设置为现在的一半，可以节省多少能量}
+
+解：其余条件不变的情况下，功率$W\propto \mbox{电压}^2 \times \mbox{频率}$，所以节省了$1-1/2^3 = 7/8 = 87.5\%$的能量
+
+
+\end{enumerate}
+
+
+
+
+\end{document}
